@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c320prja66krw"]
 
-[ext_resource type="Script" uid="uid://ddw5l810bcejj" path="res://Script/Core/board.gd" id="1_84xk1"]
+[ext_resource type="Script" uid="uid://ddw5l810bcejj" path="res://Scripts/Core/board.gd" id="1_84xk1"]
 [ext_resource type="PackedScene" uid="uid://c5jxdxe0m2fju" path="res://Scenes/Battle/Bubble.tscn" id="2_6t4q8"]
 
 [node name="Board" type="Node2D" unique_id=1848835738]

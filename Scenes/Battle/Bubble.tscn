@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c5jxdxe0m2fju"]
 
-[ext_resource type="Script" uid="uid://diy44n55thu4d" path="res://Script/Core/bubble.gd" id="1_g3wmv"]
+[ext_resource type="Script" uid="uid://diy44n55thu4d" path="res://Scripts/Core/bubble.gd" id="1_g3wmv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_65wd4"]
 radius = 40.0

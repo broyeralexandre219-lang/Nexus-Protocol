@@ -10,7 +10,7 @@ const MIN_CHAIN := 3
 
 # Animations
 const DROP_DURATION := 0.20
-const SPAWN_DURATION := 0.25
+const SPAWN_DURATION := 0.18
 const DESTROY_DURATION := 0.15
 
 var board = []
@@ -225,6 +225,8 @@ func drop_cores():
 
 func spawn_new_cores():
 
+	var tween = create_tween()
+
 	var board_width = COLS * CELL_SIZE
 	var board_height = ROWS * CELL_SIZE
 
@@ -233,10 +235,14 @@ func spawn_new_cores():
 
 	for x in range(COLS):
 
+		var empty_count := 0
+
 		for y in range(ROWS):
 
-			if board[y][x] != null:
-				continue
+			if board[y][x] == null:
+				empty_count += 1
+
+		for y in range(empty_count):
 
 			var core = core_scene.instantiate()
 
@@ -247,15 +253,25 @@ func spawn_new_cores():
 
 			core.core_type = randi() % 5
 
-			core.position = Vector2(
+			var final_position = Vector2(
 				start_x + x * CELL_SIZE + CELL_SIZE / 2.0,
 				start_y + y * CELL_SIZE + CELL_SIZE / 2.0
 			)
+
+			# Apparition au-dessus du plateau
+			core.position = final_position - Vector2(0, CELL_SIZE * empty_count)
 
 			core.core_pressed.connect(_on_core_pressed)
 			core.core_hovered.connect(_on_core_hovered)
 
 			board[y][x] = core
+
+			tween.tween_property(
+				core,
+				"position",
+				final_position,
+				SPAWN_DURATION
+			)
 
 
 func debug_board():

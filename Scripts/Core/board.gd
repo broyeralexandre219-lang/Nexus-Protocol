@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var core_scene : PackedScene
+@export var core_scene: PackedScene
 
 const COLS := 6
 const ROWS := 6
@@ -15,26 +15,19 @@ var chain_color := -1
 
 
 func _ready():
-
 	randomize()
-
 	initialize_board()
-
 	create_board()
-
 	line.clear_points()
 
 
 func initialize_board():
-
 	board.clear()
 
 	for y in range(ROWS):
-
 		board.append([])
 
 		for x in range(COLS):
-
 			board[y].append(null)
 
 
@@ -47,7 +40,6 @@ func create_board():
 	var start_y = (get_viewport_rect().size.y - board_height) / 2.0
 
 	for y in range(ROWS):
-
 		for x in range(COLS):
 
 			var core = core_scene.instantiate()
@@ -74,7 +66,7 @@ func _process(_delta):
 
 	if chain.size() > 0 and !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 
-		print("Chaîne :", chain.size())
+		print("Chaîne terminée :", chain.size())
 
 		clear_chain()
 
@@ -90,10 +82,18 @@ func _on_core_pressed(core):
 
 func _on_core_hovered(core):
 
+	if chain.is_empty():
+		return
+
 	if core.core_type != chain_color:
 		return
 
 	if chain.has(core):
+		return
+
+	var last_core = chain.back()
+
+	if not are_neighbors(last_core, core):
 		return
 
 	add_to_chain(core)
@@ -126,3 +126,11 @@ func update_line():
 
 	for core in chain:
 		line.add_point(core.position)
+
+
+func are_neighbors(core_a, core_b) -> bool:
+
+	var dx = abs(core_a.grid_x - core_b.grid_x)
+	var dy = abs(core_a.grid_y - core_b.grid_y)
+
+	return dx <= 1 and dy <= 1 and !(dx == 0 and dy == 0)

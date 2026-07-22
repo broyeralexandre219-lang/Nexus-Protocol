@@ -181,7 +181,29 @@ func remove_core(core):
 
 
 func drop_cores():
-	pass
+
+	for x in range(COLS):
+
+		for y in range(ROWS - 1, -1, -1):
+
+			if board[y][x] != null:
+				continue
+
+			for search_y in range(y - 1, -1, -1):
+
+				if board[search_y][x] == null:
+					continue
+
+				var core = board[search_y][x]
+
+				board[y][x] = core
+				board[search_y][x] = null
+
+				core.grid_y = y
+
+				core.position.y += (y - search_y) * CELL_SIZE
+
+				break
 
 
 func spawn_new_cores():

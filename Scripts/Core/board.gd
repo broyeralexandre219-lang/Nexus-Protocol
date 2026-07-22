@@ -7,14 +7,7 @@ const ROWS := 6
 const CELL_SIZE := 96.0
 
 var board = []
-
-var colors = [
-	Color.RED,
-	Color.BLUE,
-	Color.GREEN,
-	Color.YELLOW,
-	Color.PURPLE
-]
+var selected_core = null
 
 
 func _ready():
@@ -65,4 +58,16 @@ func create_board():
 
 			core.core_type = randi() % 5
 
+			core.core_clicked.connect(_on_core_clicked)
+
 			board[y][x] = core
+
+
+func _on_core_clicked(core):
+
+	if selected_core != null:
+		selected_core.set_selected(false)
+
+	selected_core = core
+
+	selected_core.set_selected(true)

@@ -1,6 +1,6 @@
 extends Area2D
 
-signal core_hovered(core)
+signal core_clicked(core)
 
 @export var core_type : int = 0
 
@@ -25,13 +25,14 @@ func _ready():
 
 
 func _draw():
+
 	draw_circle(Vector2.ZERO, RADIUS, colors[core_type])
 
 	if selected:
 		draw_arc(
 			Vector2.ZERO,
-			RADIUS + 4.0,
-			0.0,
+			RADIUS + 4,
+			0,
 			TAU,
 			64,
 			Color.WHITE,
@@ -40,10 +41,19 @@ func _draw():
 
 
 func set_selected(value: bool):
+
 	selected = value
+
+	if selected:
+		scale = Vector2(1.15, 1.15)
+	else:
+		scale = Vector2.ONE
+
 	queue_redraw()
 
 
-func _on_mouse_entered():
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
-		core_hovered.emit(self)
+func _input_event(viewport, event, shape_idx):
+
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			core_clicked.emit(self)

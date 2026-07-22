@@ -7,7 +7,11 @@ const ROWS := 6
 const CELL_SIZE := 96.0
 
 var board = []
-var selected_core = null
+
+var chain = []
+var chain_color := -1
+
+@onready var line: Line2D = $Line2D
 
 
 func _ready():
@@ -17,6 +21,8 @@ func _ready():
 	initialize_board()
 
 	create_board()
+
+	line.clear_points()
 
 
 func initialize_board():
@@ -58,16 +64,65 @@ func create_board():
 
 			core.core_type = randi() % 5
 
-			core.core_clicked.connect(_on_core_clicked)
+			core.core_pressed.connect(_on_core_pressed)
+			core.core_hovered.connect(_on_core_hovered)
 
 			board[y][x] = core
 
 
-func _on_core_clicked(core):
+func _process(_delta):
 
-	if selected_core != null:
-		selected_core.set_selected(false)
+	if chain.size() > 0 and !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 
-	selected_core = core
+		print("Chaîne :", chain.size())
 
-	selected_core.set_selected(true)
+		clear_chain()
+
+
+func _on_core_pressed(core):
+
+	clear_chain()
+
+	chain_color = core.core_type
+
+	add_to_chain(core)
+
+
+func _on_core_hovered(core):
+
+	if core.core_type != chain_color:
+		return
+
+	if chain.has(core):
+		return
+
+	add_to_chain(core)
+
+
+func add_to_chain(core):
+
+	chain.append(core)
+
+	core.set_selected(true)
+
+	update_line()
+
+
+func clear_chain():
+
+	for core in chain:
+		core.set_selected(false)
+
+	chain.clear()
+
+	chain_color = -1
+
+	update_line()
+
+
+func update_line():
+
+	line.clear_points()
+
+	for core in chain:
+		line.add_point(core.position)

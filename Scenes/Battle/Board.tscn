@@ -6,3 +6,7 @@
 [node name="Board" type="Node2D" unique_id=1987244755]
 script = ExtResource("1_4t6un")
 core_scene = ExtResource("2_q7rqg")
+
+[node name="Line2D" type="Line2D" parent="." unique_id=995886317]
+width = 8.0
+antialiased = true

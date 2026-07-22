@@ -1,12 +1,12 @@
 extends Node2D
 
-@export var bubble_scene: PackedScene
+@export var core_scene : PackedScene
 
 const COLS := 6
 const ROWS := 6
-const CELL_SIZE := 88
+const CELL_SIZE := 96.0
 
-var bubbles = []
+var board = []
 
 var colors = [
 	Color.RED,
@@ -16,124 +16,53 @@ var colors = [
 	Color.PURPLE
 ]
 
-var current_chain = []
-var dragging := false
-
 
 func _ready():
 
 	randomize()
 
-	initialize_grid()
-	generate_board()
+	initialize_board()
+
+	create_board()
 
 
-func initialize_grid():
+func initialize_board():
 
-	bubbles.clear()
+	board.clear()
 
 	for y in range(ROWS):
 
-		bubbles.append([])
+		board.append([])
 
 		for x in range(COLS):
-			bubbles[y].append(null)
+
+			board[y].append(null)
 
 
-func generate_board():
+func create_board():
 
 	var board_width = COLS * CELL_SIZE
 	var board_height = ROWS * CELL_SIZE
 
-	var viewport_size = get_viewport_rect().size
-
-	var start_x = (viewport_size.x - board_width) / 2.0
-	var start_y = (viewport_size.y - board_height) / 2.0
+	var start_x = (get_viewport_rect().size.x - board_width) / 2.0
+	var start_y = (get_viewport_rect().size.y - board_height) / 2.0
 
 	for y in range(ROWS):
 
 		for x in range(COLS):
 
-			var bubble = bubble_scene.instantiate()
+			var core = core_scene.instantiate()
 
-			add_child(bubble)
+			add_child(core)
 
-			bubble.position = Vector2(
-				start_x + x * CELL_SIZE + CELL_SIZE / 2,
-				start_y + y * CELL_SIZE + CELL_SIZE / 2
+			core.position = Vector2(
+				start_x + x * CELL_SIZE + CELL_SIZE / 2.0,
+				start_y + y * CELL_SIZE + CELL_SIZE / 2.0
 			)
 
-			bubble.grid_x = x
-			bubble.grid_y = y
+			core.grid_x = x
+			core.grid_y = y
 
-			var random_type = randi() % colors.size()
+			core.core_type = randi() % 5
 
-			bubble.bubble_type = random_type
-			bubble.color = colors[random_type]
-
-			bubbles[y][x] = bubble
-
-			bubble.bubble_clicked.connect(_on_bubble_clicked)
-			bubble.bubble_hovered.connect(_on_bubble_hovered)
-
-
-func _on_bubble_clicked(bubble):
-
-	clear_chain()
-
-	dragging = true
-
-	current_chain.append(bubble)
-
-	bubble.set_selected(true)
-
-	print("Début chaîne")
-
-
-func _on_bubble_hovered(bubble):
-
-	if !dragging:
-		return
-
-	if current_chain.has(bubble):
-		return
-
-	current_chain.append(bubble)
-
-	bubble.set_selected(true)
-
-	print("Chaîne :", current_chain.size())
-
-
-func _input(event):
-
-	if event is InputEventMouseButton:
-
-		if event.button_index == MOUSE_BUTTON_LEFT and !event.pressed:
-
-			if dragging:
-
-				dragging = false
-
-				print("Chaîne terminée :", current_chain.size())
-
-				clear_chain()
-
-
-func clear_chain():
-
-	for bubble in current_chain:
-		bubble.set_selected(false)
-
-	current_chain.clear()
-
-
-func get_bubble(x, y):
-
-	if x < 0 or y < 0:
-		return null
-
-	if x >= COLS or y >= ROWS:
-		return null
-
-	return bubbles[y][x]
+			board[y][x] = core

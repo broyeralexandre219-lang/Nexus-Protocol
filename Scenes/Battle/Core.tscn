@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://hfg5rh0j48o7"]
+
+[ext_resource type="Script" uid="uid://csgmov407twqr" path="res://Scripts/Core/core.gd" id="1_8kbyn"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_u04ku"]
+radius = 40.0
+
+[node name="Core" type="Area2D" unique_id=598248502]
+script = ExtResource("1_8kbyn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1383484768]
+shape = SubResource("CircleShape2D_u04ku")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]

@@ -1,8 +1,8 @@
-[gd_scene format=3 uid="uid://c320prja66krw"]
+[gd_scene format=3 uid="uid://dyj0rr2udcpt5"]
 
-[ext_resource type="Script" uid="uid://ddw5l810bcejj" path="res://Scripts/Core/board.gd" id="1_84xk1"]
-[ext_resource type="PackedScene" uid="uid://c5jxdxe0m2fju" path="res://Scenes/Battle/Bubble.tscn" id="2_6t4q8"]
+[ext_resource type="Script" uid="uid://dcl7ub65fnvaf" path="res://Scripts/Core/board.gd" id="1_4t6un"]
+[ext_resource type="PackedScene" uid="uid://hfg5rh0j48o7" path="res://Scenes/Battle/Core.tscn" id="2_q7rqg"]
 
-[node name="Board" type="Node2D" unique_id=1848835738]
-script = ExtResource("1_84xk1")
-bubble_scene = ExtResource("2_6t4q8")
+[node name="Board" type="Node2D" unique_id=1987244755]
+script = ExtResource("1_4t6un")
+core_scene = ExtResource("2_q7rqg")

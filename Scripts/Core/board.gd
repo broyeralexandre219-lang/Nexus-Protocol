@@ -171,6 +171,7 @@ func destroy_chain():
 	# Préparation des prochaines versions
 	drop_cores()
 	spawn_new_cores()
+	debug_board()
 
 
 func remove_core(core):
@@ -207,4 +208,51 @@ func drop_cores():
 
 
 func spawn_new_cores():
-	pass
+
+	var board_width = COLS * CELL_SIZE
+	var board_height = ROWS * CELL_SIZE
+
+	var start_x = (get_viewport_rect().size.x - board_width) / 2.0
+	var start_y = (get_viewport_rect().size.y - board_height) / 2.0
+
+	for x in range(COLS):
+
+		for y in range(ROWS):
+
+			if board[y][x] != null:
+				continue
+
+			var core = core_scene.instantiate()
+
+			add_child(core)
+
+			core.grid_x = x
+			core.grid_y = y
+
+			core.core_type = randi() % 5
+
+			core.position = Vector2(
+				start_x + x * CELL_SIZE + CELL_SIZE / 2.0,
+				start_y + y * CELL_SIZE + CELL_SIZE / 2.0
+			)
+
+			core.core_pressed.connect(_on_core_pressed)
+			core.core_hovered.connect(_on_core_hovered)
+
+			board[y][x] = core
+
+
+func debug_board():
+
+	for y in range(ROWS):
+
+		var line = ""
+
+		for x in range(COLS):
+
+			if board[y][x] == null:
+				line += ". "
+			else:
+				line += "X "
+
+		print(line)

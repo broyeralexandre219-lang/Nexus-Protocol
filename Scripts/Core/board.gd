@@ -22,12 +22,15 @@ func _ready():
 
 
 func initialize_board():
+
 	board.clear()
 
 	for y in range(ROWS):
+
 		board.append([])
 
 		for x in range(COLS):
+
 			board[y].append(null)
 
 
@@ -40,6 +43,7 @@ func create_board():
 	var start_y = (get_viewport_rect().size.y - board_height) / 2.0
 
 	for y in range(ROWS):
+
 		for x in range(COLS):
 
 			var core = core_scene.instantiate()
@@ -63,6 +67,10 @@ func create_board():
 
 
 func _process(_delta):
+
+	if chain.size() > 0:
+
+		update_line()
 
 	if chain.size() > 0 and !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 
@@ -88,7 +96,6 @@ func _on_core_hovered(core):
 	if core.core_type != chain_color:
 		return
 
-	# ----- RETOUR ARRIÈRE -----
 	if chain.has(core):
 
 		var index = chain.find(core)
@@ -96,12 +103,12 @@ func _on_core_hovered(core):
 		while chain.size() > index + 1:
 
 			var removed = chain.pop_back()
+
 			removed.set_selected(false)
 
 		update_line()
-		return
 
-	# --------------------------
+		return
 
 	var last_core = chain.back()
 
@@ -123,13 +130,14 @@ func add_to_chain(core):
 func clear_chain():
 
 	for core in chain:
+
 		core.set_selected(false)
 
 	chain.clear()
 
 	chain_color = -1
 
-	update_line()
+	line.clear_points()
 
 
 func update_line():
@@ -137,7 +145,12 @@ func update_line():
 	line.clear_points()
 
 	for core in chain:
+
 		line.add_point(core.position)
+
+	if chain.size() > 0:
+
+		line.add_point(get_global_mouse_position())
 
 
 func are_neighbors(core_a, core_b) -> bool:

@@ -5,7 +5,13 @@ extends Node2D
 const COLS := 6
 const ROWS := 6
 const CELL_SIZE := 96.0
+
 const MIN_CHAIN := 3
+
+# Animations
+const DROP_DURATION := 0.20
+const SPAWN_DURATION := 0.25
+const DESTROY_DURATION := 0.15
 
 var board = []
 
@@ -183,6 +189,8 @@ func remove_core(core):
 
 func drop_cores():
 
+	var tween = create_tween()
+
 	for x in range(COLS):
 
 		for y in range(ROWS - 1, -1, -1):
@@ -202,7 +210,15 @@ func drop_cores():
 
 				core.grid_y = y
 
-				core.position.y += (y - search_y) * CELL_SIZE
+				var target_position = core.position
+				target_position.y += (y - search_y) * CELL_SIZE
+
+				tween.tween_property(
+					core,
+					"position",
+					target_position,
+					DROP_DURATION
+				)
 
 				break
 

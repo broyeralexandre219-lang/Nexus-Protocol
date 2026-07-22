@@ -66,7 +66,7 @@ func _process(_delta):
 
 	if chain.size() > 0 and !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 
-		print("Chaîne terminée :", chain.size())
+		print("Chaîne :", chain.size())
 
 		clear_chain()
 
@@ -88,12 +88,24 @@ func _on_core_hovered(core):
 	if core.core_type != chain_color:
 		return
 
+	# ----- RETOUR ARRIÈRE -----
 	if chain.has(core):
+
+		var index = chain.find(core)
+
+		while chain.size() > index + 1:
+
+			var removed = chain.pop_back()
+			removed.set_selected(false)
+
+		update_line()
 		return
+
+	# --------------------------
 
 	var last_core = chain.back()
 
-	if not are_neighbors(last_core, core):
+	if !are_neighbors(last_core, core):
 		return
 
 	add_to_chain(core)

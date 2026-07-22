@@ -123,11 +123,12 @@ func finish_chain():
 
 		print("Chaîne annulée (", chain.size(), " Core)")
 
-	else:
+		clear_chain()
+		return
 
-		print("Chaîne validée ! (", chain.size(), " Cores)")
+	print("Chaîne validée ! (", chain.size(), " Cores)")
 
-	clear_chain()
+	destroy_chain()
 
 
 func clear_chain():
@@ -158,3 +159,30 @@ func are_neighbors(core_a, core_b) -> bool:
 	var dy = abs(core_a.grid_y - core_b.grid_y)
 
 	return dx <= 1 and dy <= 1 and !(dx == 0 and dy == 0)
+
+
+func destroy_chain():
+
+	for core in chain:
+		remove_core(core)
+
+	clear_chain()
+
+	# Préparation des prochaines versions
+	drop_cores()
+	spawn_new_cores()
+
+
+func remove_core(core):
+
+	board[core.grid_y][core.grid_x] = null
+
+	core.queue_free()
+
+
+func drop_cores():
+	pass
+
+
+func spawn_new_cores():
+	pass

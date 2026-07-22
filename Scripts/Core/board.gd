@@ -5,6 +5,7 @@ extends Node2D
 const COLS := 6
 const ROWS := 6
 const CELL_SIZE := 96.0
+const MIN_CHAIN := 3
 
 var board = []
 
@@ -22,15 +23,12 @@ func _ready():
 
 
 func initialize_board():
-
 	board.clear()
 
 	for y in range(ROWS):
-
 		board.append([])
 
 		for x in range(COLS):
-
 			board[y].append(null)
 
 
@@ -43,7 +41,6 @@ func create_board():
 	var start_y = (get_viewport_rect().size.y - board_height) / 2.0
 
 	for y in range(ROWS):
-
 		for x in range(COLS):
 
 			var core = core_scene.instantiate()
@@ -69,14 +66,11 @@ func create_board():
 func _process(_delta):
 
 	if chain.size() > 0:
-
 		update_line()
 
 	if chain.size() > 0 and !Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 
-		print("Chaîne :", chain.size())
-
-		clear_chain()
+		finish_chain()
 
 
 func _on_core_pressed(core):
@@ -103,11 +97,9 @@ func _on_core_hovered(core):
 		while chain.size() > index + 1:
 
 			var removed = chain.pop_back()
-
 			removed.set_selected(false)
 
 		update_line()
-
 		return
 
 	var last_core = chain.back()
@@ -121,20 +113,29 @@ func _on_core_hovered(core):
 func add_to_chain(core):
 
 	chain.append(core)
-
 	core.set_selected(true)
-
 	update_line()
+
+
+func finish_chain():
+
+	if chain.size() < MIN_CHAIN:
+
+		print("Chaîne annulée (", chain.size(), " Core)")
+
+	else:
+
+		print("Chaîne validée ! (", chain.size(), " Cores)")
+
+	clear_chain()
 
 
 func clear_chain():
 
 	for core in chain:
-
 		core.set_selected(false)
 
 	chain.clear()
-
 	chain_color = -1
 
 	line.clear_points()
@@ -145,11 +146,9 @@ func update_line():
 	line.clear_points()
 
 	for core in chain:
-
 		line.add_point(core.position)
 
 	if chain.size() > 0:
-
 		line.add_point(get_global_mouse_position())
 
 
